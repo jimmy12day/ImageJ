@@ -1,0 +1,31 @@
+macro "color_merge_batch"{
+    count = 1;
+    setBatchMode(true);
+
+    //Folder1 will be merged into channel FOUR
+    file1= getDirectory("Choose a Directory");
+    list1= getFileList(file1); 
+    n1=lengthOf(list1);
+
+    //Folder2 will be merged into channel TWO
+    file2= getDirectory("Choose a Directory");
+    list2= getFileList(file2); 
+    n2=lengthOf(list2);
+
+   //Folder three for saving new images
+    file3= getDirectory("Choose a Directory");
+    open(file1+list1[1]);
+    open(file2+list2[1]);
+    small = n1;
+    if(small<n2)
+    small = n2;
+
+    //Loop for batch merge two images from the same order.
+    for(i=0;i<small;i++)
+    {
+      name = "RGB 00"+count;
+      run("Merge Channels...", "c2="+list2[1]+ " c4="+list1[1]+ " keep");
+      saveAs("tiff", file3+name);
+      count++;
+    }
+}
