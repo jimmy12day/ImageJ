@@ -1,0 +1,13 @@
+#Bin Wei
+#FRAP_measurement_macro
+
+macro "FRAP_measurement" {
+ run("Set Measurements...", "mean redirect=None decimal=3"); 
+ count=roiManager("count");
+ for(i=0;i<count;i++)
+ {
+  roiManager("select",i);
+  roiManager("Multi Measure");
+  saveAs("Results", "C:\\Users\\DasLab\\Desktop\\frap\\002\\503DEL_00"+i+".xls");
+ }
+}
