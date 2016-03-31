@@ -1,0 +1,83 @@
+//Bin Wei, PhD 
+//jimmy28year@gmail.com
+//Features: Automatic remove the signal use mean algorithm, leave the original signal.
+//Run the macro by "Plugins"-"Macro"-"auto_asymmetry_measure".
+//For Batch mode, run "Process"-"Batch"-"Macro...", choose input/output file folders, write code as below:
+//run("auto_asymmetry_measure");
+ 
+macro "auto_asymmetry_measure"
+{
+  w=getWidth();
+  h=getHeight();
+  for(x=0;x<w;x++)
+  {
+    for(y=0;y<h;y++)
+    {
+     count+=1;
+     sum+=getPixel(x,y);
+    }
+  }
+
+  avg = sum/count;
+  for(x=0;x<w;x++)
+  {
+    for(y=0;y<h;y++)
+    {
+      a=getPixel(x, y);
+      if (a>avg)
+      {
+       setPixel(x,y,a);
+      }
+      else
+      {
+       setPixel(x,y,0);
+      }
+    }
+  }  
+   smallX=bigX=0;
+   smallY=bigY=0;  
+
+   for(x=0;x<w;x++)
+   {
+       for(y=0;y<h;y++)
+       {
+           if(getPixel(x,y)!=0)
+           {
+               if(smallX>x || smallX==0)
+               {
+                 smallX=x;
+               }
+               if(bigX<x)
+               {
+                 bigX=x;
+               }
+               if(smallY>y  || smallY==0)
+               { 
+                smallY=y;
+               }
+               if(bigY<y)
+               {
+                bigY=y;
+               }
+           }		
+        }
+    }     
+       	makeRectangle(smallX, smallY,bigX-smallX, bigY-smallY);
+	run("Set Measurements...", "area mean min integrated median redirect=None decimal=3");
+	a= smallX;
+	b= smallY;
+	w= (bigX-smallX)/2 ; 
+	h= (bigY-smallY)/2;
+
+	makeRectangle(a, b, w, h);
+	run("Measure");
+	wait(100);
+	makeRectangle(a+w, b, w, h);
+	run("Measure");
+	wait(100);
+	makeRectangle(a, b+h, w, h);
+	run("Measure");
+	wait(100);
+	makeRectangle(a+w, b+h, w, h);
+	run("Measure");
+}
