@@ -19,6 +19,8 @@ macro "auto_asymmetry_measure"
   }
 
   avg = sum/count;
+  
+  //Background removement (Threathhold)
   for(x=0;x<w;x++)
   {
     for(y=0;y<h;y++)
@@ -37,6 +39,7 @@ macro "auto_asymmetry_measure"
    smallX=bigX=0;
    smallY=bigY=0;  
 
+ //Indentify boundry of a circle
    for(x=0;x<w;x++)
    {
        for(y=0;y<h;y++)
@@ -62,6 +65,7 @@ macro "auto_asymmetry_measure"
            }		
         }
     }     
+    
        	makeRectangle(smallX, smallY,bigX-smallX, bigY-smallY);
 	run("Set Measurements...", "area mean min integrated median redirect=None decimal=3");
 	a= smallX;
@@ -69,6 +73,7 @@ macro "auto_asymmetry_measure"
 	w= (bigX-smallX)/2 ; 
 	h= (bigY-smallY)/2;
 
+    //Measure the symmetry of the circle
 	makeRectangle(a, b, w, h);
 	run("Measure");
 	wait(100);
